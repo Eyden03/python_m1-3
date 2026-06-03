@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Reviewer — Fill in the Blanks</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d0f1a; --surf:#131629; --card:#181c32; --border:#252a45;
+  --accent:#7c6af7; --gold:#f0c060; --green:#4ade80; --red:#f87171;
+  --text:#e2e4f0; --muted:#55607a; --code:#090b15;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(124,106,247,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(124,106,247,.025) 1px,transparent 1px);background-size:38px 38px;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:2rem 1.2rem 6rem}
+
+header{text-align:center;margin-bottom:2.5rem}
+.badge{display:inline-block;background:rgba(124,106,247,.15);border:1px solid rgba(124,106,247,.4);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.14em;padding:.25rem .8rem;border-radius:999px;margin-bottom:.8rem;text-transform:uppercase}
+h1{font-size:clamp(1.8rem,5vw,3rem);font-weight:800;background:linear-gradient(130deg,#fff 25%,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.35rem}
+.subtitle{color:var(--muted);font-size:.85rem;font-family:'JetBrains Mono',monospace}
+
+.stats{display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.8rem}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.5rem 1.1rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;display:flex;align-items:center;gap:.45rem}
+.stat b{font-size:1.05rem}
+.s-c b{color:var(--green)}.s-w b{color:var(--red)}.s-t b{color:var(--gold)}
+
+.pbar{height:3px;background:var(--border);border-radius:99px;margin-bottom:1.6rem;overflow:hidden}
+.pfill{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:99px;transition:width .5s ease}
+
+/* TOPIC SECTIONS */
+.topic-section{margin-bottom:2.8rem}
+.topic-header{display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem;padding-bottom:.6rem;border-bottom:2px solid var(--border)}
+.topic-icon{font-size:1.4rem}
+.topic-name{font-size:1.1rem;font-weight:800;letter-spacing:.02em}
+.topic-count{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);background:var(--card);border:1px solid var(--border);padding:.2rem .6rem;border-radius:6px}
+
+/* CARD */
+.ch{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1.2rem;animation:si .25s ease}
+@keyframes si{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.ch-head{display:flex;align-items:center;gap:.7rem;padding:.8rem 1.2rem;border-bottom:1px solid var(--border);background:rgba(255,255,255,.015)}
+.ch-n{background:var(--accent);color:#fff;font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:700;min-width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ch-title{font-weight:700;font-size:.88rem}
+.ch-difficulty{font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:.15rem .5rem;border-radius:999px;white-space:nowrap}
+.diff-easy{color:#4ade80;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25)}
+.diff-med{color:var(--gold);background:rgba(240,192,96,.1);border:1px solid rgba(240,192,96,.25)}
+.diff-hard{color:var(--red);background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25)}
+.ch-ico{font-size:.95rem;margin-left:auto}
+.ch-body{padding:1rem 1.2rem}
+.instr{color:var(--muted);font-size:.8rem;margin-bottom:.9rem;line-height:1.65}
+
+.code-block{background:var(--code);border:1px solid var(--border);border-radius:9px;padding:1.1rem 1.2rem;font-family:'JetBrains Mono',monospace;font-size:.79rem;line-height:2;white-space:pre-wrap;word-break:break-word;margin-bottom:.9rem;overflow-x:auto}
+.kw{color:#c792ea}.fn{color:#82aaff}.str{color:#c3e88d}.num{color:#f78c6c}.cm{color:#455a6a;font-style:italic}.op{color:#89ddff}.bi{color:#ffcb8b}
+
+.blank{display:inline-block;border:none;border-bottom:2px solid var(--accent);background:rgba(124,106,247,.08);color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:.79rem;padding:0 5px;min-width:55px;border-radius:3px 3px 0 0;outline:none;text-align:center;transition:background .18s,border-color .18s;vertical-align:baseline;line-height:inherit}
+.blank:focus{background:rgba(124,106,247,.18);border-color:var(--gold)}
+.blank.ok{border-color:var(--green);background:rgba(74,222,128,.1);color:var(--green)}
+.blank.bad{border-color:var(--red);background:rgba(248,113,113,.1);color:var(--red);animation:shk .35s}
+@keyframes shk{0%,100%{transform:translateX(0)}30%{transform:translateX(-4px)}70%{transform:translateX(4px)}}
+
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.7rem}
+.btn{padding:.42rem 1rem;border-radius:7px;font-family:'Syne',sans-serif;font-weight:700;font-size:.76rem;border:none;cursor:pointer;transition:all .18s;letter-spacing:.03em}
+.btn-check{background:var(--accent);color:#fff}.btn-check:hover{background:#6a58e0;transform:translateY(-1px)}
+.btn-hint{background:var(--card);border:1px solid var(--border);color:var(--muted)}.btn-hint:hover{border-color:var(--gold);color:var(--gold)}
+.btn-reset{background:var(--card);border:1px solid var(--border);color:var(--muted)}.btn-reset:hover{border-color:var(--red);color:var(--red)}
+.btn-show{background:var(--card);border:1px solid var(--border);color:var(--muted)}.btn-show:hover{border-color:var(--green);color:var(--green)}
+
+.fb{margin-top:.7rem;padding:.5rem .9rem;border-radius:7px;font-size:.77rem;display:none;font-family:'JetBrains Mono',monospace;line-height:1.6}
+.fb.show{display:block}
+.fb.ok{background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.25);color:var(--green)}
+.fb.bad{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);color:var(--red)}
+.fb.hint{background:rgba(240,192,96,.07);border:1px solid rgba(240,192,96,.2);color:var(--gold)}
+
+/* JUMP NAV */
+.jump-nav{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2rem}
+.jump{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:.35rem .85rem;border-radius:7px;cursor:pointer;font-size:.75rem;font-weight:700;transition:all .18s;text-decoration:none;font-family:'Syne',sans-serif}
+.jump:hover{border-color:var(--accent);color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="badge">🐍 Python Reviewer</div>
+  <h1>Fill in the Blanks</h1>
+  <p class="subtitle">// basics · conditionals · loops · functions · lambda</p>
+</header>
+
+<div class="stats">
+  <div class="stat s-c">✅ Correct <b id="sc">0</b></div>
+  <div class="stat s-w">❌ Wrong <b id="sw">0</b></div>
+  <div class="stat s-t">📋 Attempted <b id="st">0</b></div>
+</div>
+<div class="pbar"><div class="pfill" id="pf"></div></div>
+
+<div class="jump-nav">
+  <a class="jump" href="#sec-basics">📦 Basics</a>
+  <a class="jump" href="#sec-conditionals">🔀 Conditionals</a>
+  <a class="jump" href="#sec-loops">🔁 Loops</a>
+  <a class="jump" href="#sec-functions">⚙️ Functions</a>
+  <a class="jump" href="#sec-lambda">λ Lambda</a>
+</div>
+
+<div id="app"></div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────
+// Each challenge: { id, title, difficulty, instruction, parts[] }
+// parts: string | {t:'kw'|'fn'|'str'|'num'|'cm'|'bi', v:string} | {blank:n, ans:string, hint:string}
+// difficulty: 'easy'|'med'|'hard'
+
+const topics = [
+  {
+    id: "basics",
+    icon: "📦",
+    name: "Introduction & Basic Syntax",
+    challenges: [
+      {
+        id: "b1", title: "Hello World & Variables", difficulty: "easy",
+        instruction: "Fill in the blanks to print a greeting and do basic arithmetic.",
+        parts: [
+          cm("# Declare variables\n"),
+          "name = ", s('"Alice"'), "\n",
+          "age  = ", {blank:1,ans:"<any integer>",hint:"Any integer for age"}, "\n\n",
+          cm("# String concatenation with f-string\n"),
+          {t:"fn",v:"print"}, "(", {t:"fn",v:"f"}, s('"Hello, {name}! You are {age} years old."'), ")\n\n",
+          cm("# Arithmetic\n"),
+          "x = ", {blank:2,ans:"<any integer>",hint:"Any integer for x"}, "\n",
+          "y = 3\n",
+          "result = x ", {blank:3,ans:"%",hint:"Modulo — remainder after division"}, " y\n",
+          {t:"fn",v:"print"}, "(", s('"Remainder:"'), ", result)",
+        ]
+      },
+
+      
+      {
+        id: "b2", title: "Data Types & Type Conversion", difficulty: "easy",
+        instruction: "Python has int, float, str, and bool. Fill in the conversion functions.",
+        parts: [
+          cm("# Type conversion\n"),
+          "num_str = ", s('"42"'), "\n",
+          "num_int = ", {blank:1,ans:"int",hint:"Convert string to integer"}, "(num_str)\n",
+          "num_flt = ", {blank:2,ans:"float",hint:"Convert string to float"}, "(num_str)\n",
+          "result  = ", {blank:3,ans:"str",hint:"Convert number back to string"}, "(num_int)\n\n",
+          {t:"fn",v:"print"}, "(", {t:"fn",v:"type"}, "(num_int))   ", cm("# <class 'int'>\n"),
+          {t:"fn",v:"print"}, "(", {t:"fn",v:"type"}, "(num_flt))   ", cm("# <class 'float'>\n"),
+          {t:"fn",v:"print"}, "(", {t:"fn",v:"type"}, "(result))    ", cm("# <class 'str'>"),
+        ]
+      },
+      {
+        id: "b3", title: "Input & Output", difficulty: "easy",
+        instruction: "Complete the program that asks for a name and age, then prints a message.",
+        parts: [
+          "name = ", {t:"fn",v:"input"}, "(", s('"Enter your name: "'), ")\n",
+          "age  = ", {blank:1,ans:"int",hint:"Age is a whole number — which conversion function?"}, "(", {t:"fn",v:"input"}, "(", s('"Enter your age: "'), "))\n\n",
+          "next_year = age ", {blank:2,ans:"+",hint:"Add 1 to get age next year"}, " 1\n\n",
+          {t:"fn",v:"print"}, "(", {t:"fn",v:"f"}, s('"Hi {name}! Next year you will be {next_year}."'), ")",
+        ]
+      },
+      {
+        id: "b4", title: "Arithmetic Operators", difficulty: "easy",
+        instruction: "Match each operator to what it does by filling in the blanks.",
+        parts: [
+          "a, b = 17, 5\n\n",
+          {t:"fn",v:"print"}, "(a + b)   ", cm("# 22 — addition\n"),
+          {t:"fn",v:"print"}, "(a - b)   ", cm("# 12 — subtraction\n"),
+          {t:"fn",v:"print"}, "(a * b)   ", cm("# 85 — multiplication\n"),
+          {t:"fn",v:"print"}, "(a ", {blank:1,ans:"/",hint:"Regular division → float"}, " b)   ", cm("# 3.4 — division\n"),
+          {t:"fn",v:"print"}, "(a ", {blank:2,ans:"//",hint:"Floor division → integer"}, " b)   ", cm("# 3 — floor division\n"),
+          {t:"fn",v:"print"}, "(a ", {blank:3,ans:"%",hint:"Remainder after division"}, " b)   ", cm("# 2 — modulo\n"),
+          {t:"fn",v:"print"}, "(a ", {blank:4,ans:"**",hint:"Exponentiation — a to the power of b"}, " b)   ", cm("# 1419857 — exponentiation"),
+        ]
+      },
+      {
+        id: "b5", title: "Room Area (PROB1.py — from your file)", difficulty: "easy",
+        instruction: "Complete the room area calculator from your submitted file.",
+        parts: [
+          "width  = ", {blank:1,ans:"int",hint:"Whole number input conversion"}, "(", {t:"fn",v:"input"}, "(", s('"Please enter the width of the room: "'), "))\n",
+          "length = int(input(", s('"Please enter the length of the room: "'), "))\n\n",
+          "result = width ", {blank:2,ans:"*",hint:"Area = width × length"}, " length\n",
+          {t:"fn",v:"print"}, "(", {t:"fn",v:"f"}, s('"The area of the room is {result} m²."'), ")",
+        ]
+      },
+      {
+        id: "b6", title: "Field Acres (PROB2.py — from your file)", difficulty: "easy",
+        instruction: "Convert square feet to acres. 1 acre = 43,560 sq ft.",
+        parts: [
+          "width  = int(input(", s('"Please enter the width of the field in feet: "'), "))\n",
+          "length = int(input(", s('"Please enter the length of the field in feet: "'), "))\n\n",
+          "result       = width * ", {blank:1,ans:"length",hint:"Multiply the two dimensions"}, "\n",
+          "sqFeetPerAcre = ", {blank:2,ans:"43560",hint:"Magic number: sq ft in one acre"}, "\n",
+          "acres        = result ", {blank:3,ans:"/",hint:"Divide total area by sq ft per acre"}, " sqFeetPerAcre\n",
+          {t:"fn",v:"print"}, "(", {t:"fn",v:"f"}, s('"The area of the field in acres is {acres} acres."'), ")",
+        ]
+      },
+      {
+        id: "b7", title: "Bottle Refund (PROB3.py — from your file)", difficulty: "easy",
+        instruction: "Small bottles (≤1L) = $0.10 refund. Large (>1L) = $0.25. Fill in the rates.",
+        parts: [
+          "small = int(input(", s('"How many bottles have one litre or less: "'), "))\n",
+          "large = int(input(", s('"How many bottles have more than one litre: "'), "))\n\n",
+          "refund_small = small * ", {blank:1,ans:"0.10",hint:"10 cents per small bottle"}, "\n",
+          "refund_large = large * ", {blank:2,ans:"0.25",hint:"25 cents per large bottle"}, "\n",
+          "total        = refund_small ", {blank:3,ans:"+",hint:"Add both refunds together"}, " refund_large\n\n",
+          {t:"fn",v:"print"}, "(", {t:"fn",v:"f"}, s('"The refund is ${total:.2f}."'), ")",
+        ]
+      },
+    ]
+  },
+  {
+    id: "conditionals",
+    icon: "🔀",
+    name: "Conditional Statements",
+    challenges: [
+      {
+        id: "c1", title: "Positive / Negative / Zero", difficulty: "easy",
+        instruction: "Classic first conditional: determine the sign of a number.",
+        parts: [
+          "num = int(input(", s('"Enter a number: "'), "))\n\n",
+          {blank:1,ans:"if",hint:"First branch keyword"}, " num > 0:\n",
+          "    print(", s('"Positive"'), ")\n",
+          {blank:2,ans:"elif",hint:"Middle branch keyword"}, " num < 0:\n",
+          "    print(", s('"Negative"'), ")\n",
+          {blank:3,ans:"else",hint:"Last fallback branch"}, ":\n",
+          "    print(", s('"Zero"'), ")",
+        ]
+      },
+      {
+        id: "c2", title: "Even or Odd", difficulty: "easy",
+        instruction: "Use the modulo operator to check if a number is even or odd.",
+        parts: [
+          "n = int(input(", s('"Enter a number: "'), "))\n\n",
+          "if n ", {blank:1,ans:"%",hint:"Modulo operator"}, " 2 ", {blank:2,ans:"==",hint:"Equality check"}, " 0:\n",
+          "    print(n, ", s('"is even"'), ")\n",
+          "else:\n",
+          "    print(n, ", s('"is odd"'), ")",
+        ]
+      },
+      {
+        id: "c3", title: "Grade Points (P3.py — from your file)", difficulty: "easy",
+        instruction: "Complete the grade-to-points converter from your submitted file.",
+        parts: [
+          "grade = input(", s('"Enter grade: "'), ")\n\n",
+          "if grade == ", {blank:1,ans:'"A+"',hint:"Highest letter grade string"}, ":\n",
+          "    points = 4.0\n",
+          "elif grade == ", {blank:2,ans:'"A"',hint:"Plain A"}, ":\n",
+          "    points = 4.0\n",
+          "elif grade == ", {blank:3,ans:'"A-"',hint:"A minus"}, ":\n",
+          "    points = 3.7\n",
+          "elif grade == ", s('"B+"'), ":\n",
+          "    points = ", {blank:4,ans:"3.3",hint:"B+ = 3.3 GPA points"}, "\n",
+          "elif grade == ", s('"F"'), ":\n",
+          "    points = ", {blank:5,ans:"0",hint:"Failing grade = 0 points"}, "\n",
+          "else:\n",
+          "    points = ", {blank:6,ans:"None",hint:"Python's null / invalid value"}, "\n\n",
+          "if points is not None:\n",
+          "    print(f", s('"Grade points: {points}"'), ")\n",
+          "else:\n",
+          "    print(", s('"Invalid grade entered"'), ")",
+        ]
+      },
+      {
+        id: "c4", title: "Earthquake Classifier (P2.py — from your file)", difficulty: "med",
+        instruction: "Fill in missing comparison operators and classification strings.",
+        parts: [
+          "magnitude = float(input(", s('"Enter an earthquake magnitude: "'), "))\n\n",
+          "if magnitude ", {blank:1,ans:"<",hint:"Micro is the smallest — less than 2.0"}, " 2.0:\n",
+          "    descr = ", {blank:2,ans:'"Micro"',hint:"Smallest quake classification"}, "\n",
+          "elif magnitude >= 2.0 and magnitude < 3.0:\n",
+          "    descr = ", s('"Very Minor"'), "\n",
+          "elif magnitude >= 3.0 and magnitude < 4.0:\n",
+          "    descr = ", {blank:3,ans:'"Minor"',hint:"3.0 to 4.0 range"}, "\n",
+          "elif magnitude >= 5.0 and magnitude < 6.0:\n",
+          "    descr = ", {blank:4,ans:'"Moderate"',hint:"5.0 to 6.0 range"}, "\n",
+          "elif magnitude >= 7.0 and magnitude < 8.0:\n",
+          "    descr = ", {blank:5,ans:'"Major"',hint:"7.0 to 8.0 range"}, "\n",
+          "else:\n",
+          "    descr = ", s('"Meteoric"'), "\n\n",
+          "print(f", s('"This earthquake is classified as {descr}"'), ")",
+        ]
+      },
+      {
+        id: "c5", title: "Zodiac Sign (P1.py — from your file)", difficulty: "med",
+        instruction: "Complete the nested if-elif structure for zodiac signs.",
+        parts: [
+          "month = int(input(", s('"Enter month of birth: "'), "))\n",
+          "day   = int(input(", s('"Enter day of birth: "'), "))\n\n",
+          "if month == 1:\n",
+          "    if day ", {blank:1,ans:">=",hint:"Aquarius starts on the 20th"}, " 20:\n",
+          "        print(", s('"You are an Aquarius."'), ")\n",
+          "    else:\n",
+          "        print(", s('"You are a Capricorn."'), ")\n",
+          "elif month == 3:\n",
+          "    if day >= ", {blank:2,ans:"21",hint:"Aries starts on the 21st of March"}, ":\n",
+          "        print(", s('"You are an Aries."'), ")\n",
+          "    else:\n",
+          "        print(", s('"You are a Pisces."'), ")\n",
+          "elif month == 7:\n",
+          "    if day >= ", {blank:3,ans:"23",hint:"Leo starts July 23"}, ":\n",
+          "        print(", s('"You are a Leo."'), ")\n",
+          "    else:\n",
+          "        print(", s('"You are a Cancer."'), ")\n",
+          "elif month == 12:\n",
+          "    if day >= ", {blank:4,ans:"22",hint:"Capricorn starts Dec 22"}, ":\n",
+          "        print(", s('"You are a Capricorn."'), ")\n",
+          "    else:\n",
+          "        print(", s('"You are a Sagittarius."'), ")",
+        ]
+      },
+      {
+        id: "c6", title: "Leap Year Checker", difficulty: "med",
+        instruction: "A leap year is divisible by 4, BUT if divisible by 100 it must also be divisible by 400.",
+        parts: [
+          "year = int(input(", s('"Enter a year: "'), "))\n\n",
+          "if (year ", {blank:1,ans:"%",hint:"Modulo operator"}, " 4 == 0 and year % 100 != 0) or (year % 400 ", {blank:2,ans:"==",hint:"Equality check for 400"}, " 0):\n",
+          "    print(year, ", s('"is a leap year"'), ")\n",
+          "else:\n",
+          "    print(year, ", {blank:3,ans:'"is not a leap year"',hint:"The opposite message"}, ")",
+        ]
+      },
+      {
+        id: "c7", title: "BMI Calculator", difficulty: "med",
+        instruction: "Calculate BMI and classify it. BMI = weight / (height * height).",
+        parts: [
+          "weight = float(input(", s('"Enter weight in kg: "'), "))\n",
+          "height = float(input(", s('"Enter height in m: "'), "))\n\n",
+          "bmi = weight ", {blank:1,ans:"/",hint:"Divide weight by height squared"}, " (height ", {blank:2,ans:"**",hint:"Exponentiation operator"}, " 2)\n\n",
+          "if bmi < 18.5:\n",
+          "    category = ", {blank:3,ans:'"Underweight"',hint:"BMI below 18.5"}, "\n",
+          "elif bmi < 25.0:\n",
+          "    category = ", s('"Normal"'), "\n",
+          "elif bmi < 30.0:\n",
+          "    category = ", {blank:4,ans:'"Overweight"',hint:"BMI 25.0 to 30.0"}, "\n",
+          "else:\n",
+          "    category = ", s('"Obese"'), "\n\n",
+          "print(f", s('"BMI: {bmi:.1f} — {category}"'), ")",
+        ]
+      },
+      {
+        id: "c8", title: "Senior Discount (from quiz screenshot)", difficulty: "med",
+        instruction: "Fill in the 7 blanks from the quiz: senior citizens (age ≥ 60) get 20% off.",
+        parts: [
+          "def ", {blank:1,ans:"computeDiscount",hint:"Function name for computing discount"}, "(age, amount):\n",
+          "    if age >= ", {blank:2,ans:"60",hint:"Senior citizen threshold in PH"}, ":\n",
+          "        return amount * ", {blank:3,ans:"0.20",hint:"20% = 0.20"}, "\n",
+          "    else:\n",
+          "        return 0\n\n",
+          "def computeAmount(total, discount):\n",
+          "    return total - ", {blank:4,ans:"discount",hint:"Subtract the discount"}, "\n\n",
+          "name  = input(", s('"Enter Customer Name: "'), ")\n",
+          "age   = ", {blank:5,ans:"int",hint:"Age is a whole number"}, "(input(", s('"Enter Age: "'), "))\n",
+          "total = float(input(", s('"Enter Total Amount: "'), "))\n\n",
+          "discount    = computeDiscount(age, total)\n",
+          "amountToPay = ", {blank:6,ans:"computeAmount",hint:"Call the amount function"}, "(total, discount)\n\n",
+          "print(", s('"\\nCustomer:"'), ", name)\n",
+          "print(", s('"Discount:"'), ", discount)\n",
+          "print(", s('"Amount to Pay:"'), ", ", {blank:7,ans:"amountToPay",hint:"The final amount variable"}, ")",
+        ]
+      },
+      {
+        id: "c9", title: "Triangle Type", difficulty: "hard",
+        instruction: "Classify a triangle as Equilateral, Isosceles, or Scalene using nested conditions.",
+        parts: [
+          "a = int(input(", s('"Side a: "'), "))\n",
+          "b = int(input(", s('"Side b: "'), "))\n",
+          "c = int(input(", s('"Side c: "'), "))\n\n",
+          "if a == b ", {blank:1,ans:"and",hint:"Logical operator joining two conditions"}, " b == c:\n",
+          "    print(", s('"Equilateral"'), ")\n",
+          "elif a == b ", {blank:2,ans:"or",hint:"Any two sides equal = isosceles"}, " b == c or a == c:\n",
+          "    print(", s('"Isosceles"'), ")\n",
+          {blank:3,ans:"else",hint:"All sides different"}, ":\n",
+          "    print(", s('"Scalene"'), ")",
+        ]
+      },
+    ]
+  },
+  {
+    id: "loops",
+    icon: "🔁",
+    name: "Loops (for & while)",
+    challenges: [
+      {
+        id: "l1", title: "Count Up (upto.py — from your file)", difficulty: "easy",
+        instruction: "Fill in the while-loop that prints numbers from start to last.",
+        parts: [
+          "start = int(input(", s('"Enter starting number: "'), "))\n",
+          "last  = int(input(", s('"Enter last number: "'), "))\n\n",
+          "if start > last:\n",
+          "    print(", s('"Invalid Input."'), ")\n",
+          "else:\n",
+          "    print(", s('"The numbers are: "'), ", end=", s('""'), ")\n",
+          "    ", {blank:1,ans:"while",hint:"Loop type that runs until condition is false"}, " start <= last:\n",
+          "        print(start, end=", s('""'), ")\n",
+          "        start = start ", {blank:2,ans:"+",hint:"Increment to move forward"}, " 1\n",
+          "    print()",
+        ]
+      },
+      {
+        id: "l2", title: "Star Triangle (stars.py — from your file)", difficulty: "easy",
+        instruction: "Fill in the nested loops that print a star triangle.",
+        parts: [
+          "num = int(input(", s('"Enter a number: "'), "))\n\n",
+          "if num <= 0:\n",
+          "    print(", s('"Invalid Input."'), ")\n",
+          "else:\n",
+          "    for i in ", {blank:1,ans:"range",hint:"Built-in function for sequences"}, "(1, num + 1):\n",
+          "        for j in range(", {blank:2,ans:"i",hint:"Inner loop runs i times for row i"}, "):\n",
+          "            print(", s('"*"'), ", end=", s('""'), ")\n",
+          "        print()",
+        ]
+      },
+      {
+        id: "l3", title: "Divisible by 5 (divfive.py — from your file)", difficulty: "easy",
+        instruction: "Complete the loop that prints numbers divisible by 5 in a range.",
+        parts: [
+          "init = int(input(", s('"Enter initial value: "'), "))\n",
+          "term = int(input(", s('"Enter terminal value: "'), "))\n\n",
+          "if init > term:\n",
+          "    print(", s('"Invalid entry."'), ")\n",
+          "else:\n",
+          "    for num in range(init, term + 1):\n",
+          "        if num ", {blank:1,ans:"%",hint:"Modulo operator — remainder"}, " 5 ", {blank:2,ans:"==",hint:"Check if remainder equals zero"}, " 0:\n",
+          "            print(num, end=", s('" "'), ")",
+        ]
+      },
+      {
+        id: "l4", title: "Sum of N Numbers (for loop)", difficulty: "easy",
+        instruction: "Use a for loop and range() to sum numbers from 1 to n.",
+        parts: [
+          "n   = int(input(", s('"Enter n: "'), "))\n",
+          "total = ", {blank:1,ans:"0",hint:"Initialize accumulator to zero"}, "\n\n",
+          "for i in range(", {blank:2,ans:"1",hint:"Start at 1, not 0"}, ", n + 1):\n",
+          "    total ", {blank:3,ans:"+=",hint:"Shorthand for total = total + i"}, " i\n\n",
+          "print(f", s('"Sum from 1 to {n} is {total}"'), ")",
+        ]
+      },
+      {
+        id: "l5", title: "Multiplication Table", difficulty: "easy",
+        instruction: "Print the multiplication table for a given number using a for loop.",
+        parts: [
+          "num = int(input(", s('"Enter a number: "'), "))\n\n",
+          "for i in range(", {blank:1,ans:"1",hint:"Tables usually start at 1"}, ", 11):\n",
+          "    result = num ", {blank:2,ans:"*",hint:"Multiplication"}, " i\n",
+          "    print(f", s('"{num} x {i} = {result}"'), ")",
+        ]
+      },
+      {
+        id: "l6", title: "Count Down (while loop)", difficulty: "easy",
+        instruction: "Count down from a given number to 1, then print 'Blastoff!'",
+        parts: [
+          "n = int(input(", s('"Enter countdown start: "'), "))\n\n",
+          "while n ", {blank:1,ans:">",hint:"Keep looping while n is above 0"}, " 0:\n",
+          "    print(n)\n",
+          "    n ", {blank:2,ans:"-=",hint:"Shorthand for n = n - 1"}, " 1\n\n",
+          "print(", s('"Blastoff!"'), ")",
+        ]
+      },
+      {
+        id: "l7", title: "Reverse a String (for loop)", difficulty: "med",
+        instruction: "Loop through a string backwards and build the reversed version.",
+        parts: [
+          "word = input(", s('"Enter a word: "'), ")\n",
+          "rev  = ", {blank:1,ans:'""',hint:"Start with empty string accumulator"}, "\n\n",
+          "for ch in word:\n",
+          "    rev = ch + ", {blank:2,ans:"rev",hint:"Prepend each character"}, "\n\n",
+          "print(f", s('"{word} reversed is {rev}"'), ")",
+        ]
+      },
+      {
+        id: "l8", title: "Guess the Number (while + break)", difficulty: "med",
+        instruction: "Loop until the user guesses the secret number. Use break to exit.",
+        parts: [
+          "secret = 7\n",
+          "attempts = 0\n\n",
+          "while ", {blank:1,ans:"True",hint:"Infinite loop — we'll break out manually"}, ":\n",
+          "    guess    = int(input(", s('"Guess: "'), "))\n",
+          "    attempts ", {blank:2,ans:"+=",hint:"Increment attempt counter"}, " 1\n",
+          "    if guess == secret:\n",
+          "        print(f", s('"Correct in {attempts} tries!"'), ")\n",
+          "        ", {blank:3,ans:"break",hint:"Exit the loop when correct"}, "\n",
+          "    elif guess < secret:\n",
+          "        print(", s('"Too low"'), ")\n",
+          "    else:\n",
+          "        print(", s('"Too high"'), ")",
+        ]
+      },
+      {
+        id: "l9", title: "Skip Multiples of 3 (continue)", difficulty: "med",
+        instruction: "Print numbers 1–20, but SKIP any multiple of 3 using continue.",
+        parts: [
+          "for i in range(1, ", {blank:1,ans:"21",hint:"Range end is exclusive — use 21 for 1..20"}, "):\n",
+          "    if i % 3 == ", {blank:2,ans:"0",hint:"Divisible = remainder is 0"}, ":\n",
+          "        ", {blank:3,ans:"continue",hint:"Skip the rest of this iteration"}, "\n",
+          "    print(i, end=", s('" "'), ")",
+        ]
+      },
+      {
+        id: "l10", title: "Count Odd / Div5 / PosNeg (from quiz screenshot)", difficulty: "hard",
+        instruction: "Fill in the 8 blanks from the quiz. Analyze a list of numbers.",
+        parts: [
+          "def countOdd(numbers):\n",
+          "    count = 0\n",
+          "    for num in numbers:\n",
+          "        if num % ", {blank:1,ans:"2",hint:"Odd = not divisible by 2"}, " != 0:\n",
+          "            count += 1\n",
+          "    return ", {blank:2,ans:"count",hint:"Return the accumulated count"}, "\n\n",
+          "def countDivisibleBy5(numbers):\n",
+          "    count = 0\n",
+          "    for num in numbers:\n",
+          "        if num % ", {blank:3,ans:"5",hint:"Check divisibility by 5"}, " == 0:\n",
+          "            count += 1\n",
+          "    return count\n\n",
+          "def countPosNeg(numbers):\n",
+          "    positive = negative = 0\n",
+          "    for num in numbers:\n",
+          "        if num ", {blank:4,ans:">",hint:"Positive means > 0"}, " 0:\n",
+          "            positive += 1\n",
+          "        elif num ", {blank:5,ans:"<",hint:"Negative means < 0"}, " 0:\n",
+          "            negative += 1\n",
+          "    return positive, ", {blank:6,ans:"negative",hint:"Return both values"}, "\n\n",
+          "values = [10, -3, 5, 8, -15, 7, 20, -4]\n",
+          "oddCount    = ", {blank:7,ans:"countOdd",hint:"Call the odd-counting function"}, "(values)\n",
+          "div5Count   = countDivisibleBy5(values)\n",
+          "pos, neg    = countPosNeg(values)\n",
+          "print(", s('"Negative Numbers:"'), ", ", {blank:8,ans:"neg",hint:"The negative count variable"}, ")",
+        ]
+      },
+    ]
+  },
+  {
+    id: "functions",
+    icon: "⚙️",
+    name: "Functions",
+    challenges: [
+      {
+        id: "f1", title: "Student Grade Analyzer (from quiz screenshot)", difficulty: "easy",
+        instruction: "Complete the three-function grade analyzer shown in the quiz.",
+        parts: [
+          "def ", {blank:1,ans:"compute_average",hint:"Function that averages 3 quizzes"}, "(q1, q2, q3):\n",
+          "    return (q1 + q2 + q3) / ", {blank:2,ans:"3",hint:"Divide by the number of quizzes"}, "\n\n",
+          "def get_remarks(average):\n",
+          "    if average >= ", {blank:3,ans:"90",hint:"Excellent threshold"}, ":\n",
+          "        return ", s('"Excellent"'), "\n",
+          "    elif average >= ", {blank:4,ans:"75",hint:"Passed threshold"}, ":\n",
+          "        return ", s('"Passed"'), "\n",
+          "    else:\n",
+          "        return ", s('"Failed"'), "\n\n",
+          "def display_result(name, average, remarks):\n",
+          "    print(", s('"Student Name:"'), ", name)\n",
+          "    print(", s('"Average:"'), ", average)\n",
+          "    print(", s('"Remarks:"'), ", remarks)\n\n",
+          "student_name = input(", s('"Enter student name: "'), ")\n",
+          "quiz1 = float(input(", s('"Enter Quiz 1: "'), "))\n",
+          "quiz2 = float(input(", s('"Enter Quiz 2: "'), "))\n",
+          "quiz3 = float(input(", s('"Enter Quiz 3: "'), "))\n\n",
+          "avg     = compute_average(quiz1, quiz2, quiz3)\n",
+          "remarks = ", {blank:5,ans:"get_remarks",hint:"Call the remarks function with avg"}, "(avg)\n",
+          "display_result(student_name, avg, remarks)",
+        ]
+      },
+      {
+        id: "f2", title: "Shopping Calculator (from quiz screenshot)", difficulty: "easy",
+        instruction: "Complete the shopping calculator with tiered discount functions.",
+        parts: [
+          "def compute_total(price, quantity):\n",
+          "    return price ", {blank:1,ans:"*",hint:"Total = price × quantity"}, " quantity\n\n",
+          "def compute_discount(total):\n",
+          "    if total >= ", {blank:2,ans:"1000",hint:"10% off threshold"}, ":\n",
+          "        return total * 0.10\n",
+          "    elif total >= ", {blank:3,ans:"500",hint:"5% off threshold"}, ":\n",
+          "        return total * 0.05\n",
+          "    else:\n",
+          "        return ", {blank:4,ans:"0",hint:"No discount"}, "\n\n",
+          "def compute_final_amount(total, discount):\n",
+          "    return total ", {blank:5,ans:"-",hint:"Subtract discount from total"}, " discount\n\n",
+          "item      = input(", s('"Enter item name: "'), ")\n",
+          "price     = float(input(", s('"Enter item price: "'), "))\n",
+          "quantity  = int(input(", s('"Enter quantity: "'), "))\n\n",
+          "total    = compute_total(price, quantity)\n",
+          "disc     = compute_discount(total)\n",
+          "final    = compute_final_amount(total, disc)\n",
+          "print(f", s('"Item: {item}  Total: {total}  Discount: {disc}  Final: {final}"'), ")",
+        ]
+      },
+      {
+        id: "f3", title: "Find Largest (from your extra code)", difficulty: "easy",
+        instruction: "Complete the findLargest function that returns the bigger of two numbers.",
+        parts: [
+          "def findLargest(num1, num2):\n",
+          "    if num1 ", {blank:1,ans:">",hint:"Greater-than comparison"}, " num2:\n",
+          "        return ", {blank:2,ans:"num1",hint:"Return the first number if it's bigger"}, "\n",
+          "    else:\n",
+          "        return ", {blank:3,ans:"num2",hint:"Otherwise return the second"}, "\n\n",
+          "firstNum  = int(input(", s('"Enter first number: "'), "))\n",
+          "secondNum = int(input(", s('"Enter second number: "'), "))\n",
+          "largest   = ", {blank:4,ans:"findLargest",hint:"Call the function with both numbers"}, "(firstNum, secondNum)\n",
+          "print(f", s('"\\nThe larger number is {largest}"'), ")",
+        ]
+      },
+      {
+        id: "f4", title: "Factorial — Recursive (from your extra code)", difficulty: "med",
+        instruction: "Classic recursion: fill in the base case and the recursive call.",
+        parts: [
+          "def factorial(n):\n",
+          "    if n == ", {blank:1,ans:"0",hint:"Base case: 0! = 1"}, ":\n",
+          "        return ", {blank:2,ans:"1",hint:"0! is defined as 1"}, "\n",
+          "    else:\n",
+          "        return n * ", {blank:3,ans:"factorial",hint:"Function calls itself — recursion!"}, "(n - 1)\n\n",
+          "number = int(input(", s('"Enter a number: "'), "))\n",
+          "result = factorial(number)\n",
+          "print(f", s('"Factorial = {result}"'), ")",
+        ]
+      },
+      {
+        id: "f5", title: "Power — Recursive (from your extra code)", difficulty: "med",
+        instruction: "Compute base^exp recursively. x^0 = 1 is the base case.",
+        parts: [
+          "def power(base, exp):\n",
+          "    if exp == ", {blank:1,ans:"0",hint:"Anything to the power of 0 is 1"}, ":\n",
+          "        return ", {blank:2,ans:"1",hint:"x^0 = 1"}, "\n",
+          "    else:\n",
+          "        return base * power(base, ", {blank:3,ans:"exp - 1",hint:"Reduce exponent by 1 each call"}, ")\n\n",
+          "base     = int(input(", s('"Enter the base number: "'), "))\n",
+          "exponent = int(input(", s('"Enter the exponent: "'), "))\n",
+          "answer   = ", {blank:4,ans:"power",hint:"Call the power function"}, "(base, exponent)\n",
+          "print(f", s('"Answer = {answer}"'), ")",
+        ]
+      },
+      {
+        id: "f6", title: "Circle Calculator (def + return)", difficulty: "easy",
+        instruction: "Write functions to compute the area and circumference of a circle.",
+        parts: [
+          "import math\n\n",
+          "def area(radius):\n",
+          "    return math.", {blank:1,ans:"pi",hint:"Python's pi constant from the math module"}, " * radius ", {blank:2,ans:"**",hint:"Exponentiation: radius squared"}, " 2\n\n",
+          "def circumference(radius):\n",
+          "    return 2 * math.pi * ", {blank:3,ans:"radius",hint:"Formula: 2πr"}, "\n\n",
+          "r = float(input(", s('"Enter radius: "'), "))\n",
+          "print(f", s('"Area: {area(r):.2f}"'), ")\n",
+          "print(f", s('"Circumference: {circumference(r):.2f}"'), ")",
+        ]
+      },
+      {
+        id: "f7", title: "Temperature Converter (two functions)", difficulty: "easy",
+        instruction: "Fill in the conversion formulas. C to F: (C × 9/5) + 32. F to C: (F - 32) × 5/9.",
+        parts: [
+          "def celsius_to_fahrenheit(c):\n",
+          "    return (c * ", {blank:1,ans:"9",hint:"Numerator in C→F formula"}, " / 5) + ", {blank:2,ans:"32",hint:"Offset added at the end"}, "\n\n",
+          "def fahrenheit_to_celsius(f):\n",
+          "    return (f - 32) * ", {blank:3,ans:"5",hint:"Numerator in F→C formula"}, " / ", {blank:4,ans:"9",hint:"Denominator in F→C formula"}, "\n\n",
+          "temp = float(input(", s('"Enter Celsius: "'), "))\n",
+          "print(f", s('"{temp}°C = {celsius_to_fahrenheit(temp):.1f}°F"'), ")",
+        ]
+      },
+      {
+        id: "f8", title: "Default Parameters", difficulty: "med",
+        instruction: "Python allows default values for parameters. Fill in the defaults.",
+        parts: [
+          "def greet(name, greeting=", {blank:1,ans:'"Hello"',hint:"Default greeting string"}, "):\n",
+          "    print(f", s('"{greeting}, {name}!"'), ")\n\n",
+          "def power(base, exp=", {blank:2,ans:"2",hint:"Default exponent (square)"}, "):\n",
+          "    return base ** exp\n\n",
+          cm("# Calls using defaults\n"),
+          "greet(", s('"Alice"'), ")          ", cm("# Hello, Alice!\n"),
+          "greet(", s('"Bob"'), ", ", s('"Hi"'), ")    ", cm("# Hi, Bob!\n"),
+          "print(power(3))         ", cm("# 9 (3^2)\n"),
+          "print(power(2, ", {blank:3,ans:"10",hint:"Override default: 2^10"}, "))  ", cm("# 1024"),
+        ]
+      },
+      {
+        id: "f9", title: "Multiple Return Values", difficulty: "med",
+        instruction: "Python functions can return multiple values as a tuple.",
+        parts: [
+          "def min_max(numbers):\n",
+          "    mn = ", {blank:1,ans:"min",hint:"Built-in function for minimum"}, "(numbers)\n",
+          "    mx = ", {blank:2,ans:"max",hint:"Built-in function for maximum"}, "(numbers)\n",
+          "    return ", {blank:3,ans:"mn, mx",hint:"Return both values separated by comma"}, "\n\n",
+          "data = [4, 1, 9, 2, 7, 3]\n",
+          "smallest, largest = min_max(data)\n",
+          "print(f", s('"Min: {smallest}  Max: {largest}"'), ")",
+        ]
+      },
+    ]
+  },
+  {
+    id: "lambda",
+    icon: "λ",
+    name: "Lambda Functions",
+    challenges: [
+      {
+        id: "lam1", title: "Basic Lambda Syntax", difficulty: "easy",
+        instruction: "Lambda is an anonymous one-line function. Syntax: lambda args: expression",
+        parts: [
+          cm("# Regular function\n"),
+          "def square(x):\n",
+          "    return x ** 2\n\n",
+          cm("# Equivalent lambda\n"),
+          "square_lam = ", {blank:1,ans:"lambda",hint:"Keyword for anonymous function"}, " x: x ** 2\n\n",
+          "double = lambda x: x * ", {blank:2,ans:"2",hint:"Multiply by 2"}, "\n",
+          "add    = lambda x, y: x ", {blank:3,ans:"+",hint:"Addition operator"}, " y\n\n",
+          "print(square_lam(5))   ", cm("# 25\n"),
+          "print(double(4))       ", cm("# 8\n"),
+          "print(add(3, 7))       ", cm("# 10"),
+        ]
+      },
+      {
+        id: "lam2", title: "Lambda with sorted()", difficulty: "med",
+        instruction: "Use lambda as the key argument to sort a list of tuples by the second element.",
+        parts: [
+          "students = [\n",
+          "    (", s('"Alice"'), ", 88),\n",
+          "    (", s('"Bob"'), ", 95),\n",
+          "    (", s('"Carol"'), ", 72),\n",
+          "]\n\n",
+          cm("# Sort by score (index 1)\n"),
+          "sorted_students = sorted(students, key=", {blank:1,ans:"lambda",hint:"Anonymous function keyword"}, " s: s[", {blank:2,ans:"1",hint:"Index 1 = the score, not the name"}, "])\n\n",
+          cm("# Sort by name (index 0)\n"),
+          "by_name = sorted(students, key=lambda s: s[", {blank:3,ans:"0",hint:"Index 0 = the name"}, "])\n\n",
+          "print(sorted_students)\n",
+          "print(by_name)",
+        ]
+      },
+      {
+        id: "lam3", title: "Lambda with map()", difficulty: "med",
+        instruction: "map() applies a function to every item in an iterable.",
+        parts: [
+          "numbers = [1, 2, 3, 4, 5]\n\n",
+          cm("# Square each number\n"),
+          "squares = list(", {blank:1,ans:"map",hint:"Function that applies another function to each item"}, "(lambda x: x ** 2, numbers))\n\n",
+          cm("# Convert Celsius list to Fahrenheit\n"),
+          "celsius = [0, 20, 37, 100]\n",
+          "fahrenheit = list(map(lambda c: (c * 9/", {blank:2,ans:"5",hint:"Denominator in C→F"}, ") + 32, celsius))\n\n",
+          "print(squares)      ", cm("# [1, 4, 9, 16, 25]\n"),
+          "print(fahrenheit)   ", cm("# [32.0, 68.0, 98.6, 212.0]"),
+        ]
+      },
+      {
+        id: "lam4", title: "Lambda with filter()", difficulty: "med",
+        instruction: "filter() keeps only items where the lambda returns True.",
+        parts: [
+          "numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\n\n",
+          cm("# Keep only even numbers\n"),
+          "evens = list(", {blank:1,ans:"filter",hint:"Function that filters based on a condition"}, "(lambda x: x % 2 == ", {blank:2,ans:"0",hint:"Even numbers have remainder 0"}, ", numbers))\n\n",
+          cm("# Keep numbers greater than 5\n"),
+          "big   = list(filter(lambda x: x ", {blank:3,ans:">",hint:"Greater than"}, " 5, numbers))\n\n",
+          "print(evens)   ", cm("# [2, 4, 6, 8, 10]\n"),
+          "print(big)     ", cm("# [6, 7, 8, 9, 10]"),
+        ]
+      },
+      {
+        id: "lam5", title: "Lambda as Function Argument", difficulty: "med",
+        instruction: "A lambda can be passed directly as an argument to another function.",
+        parts: [
+          "def apply(func, value):\n",
+          "    return ", {blank:1,ans:"func",hint:"Call the function parameter"}, "(value)\n\n",
+          "result1 = apply(lambda x: x * 10, 5)\n",
+          "result2 = apply(lambda x: x.upper(), ", s('"hello"'), ")\n",
+          "result3 = apply(lambda x: x ", {blank:2,ans:"**",hint:"Exponentiation"}, " 3, 4)  ", cm("# 64\n\n"),
+          "print(result1)   ", cm("# 50\n"),
+          "print(result2)   ", cm("# HELLO\n"),
+          "print(result3)   ", cm("# 64"),
+        ]
+      },
+      {
+        id: "lam6", title: "Lambda vs def — Spot the Equivalents", difficulty: "easy",
+        instruction: "Convert each regular function to its lambda equivalent by filling in the blanks.",
+        parts: [
+          cm("# --- Convert these def functions to lambda ---\n\n"),
+          "def add_ten(x):        return x + 10\n",
+          "add_ten_lam = lambda x: x + ", {blank:1,ans:"10",hint:"Same constant as the def version"}, "\n\n",
+          "def multiply(x, y):    return x * y\n",
+          "multiply_lam = ", {blank:2,ans:"lambda",hint:"Anonymous function keyword"}, " x, y: x * y\n\n",
+          "def is_positive(x):    return x > 0\n",
+          "is_positive_lam = lambda x: x ", {blank:3,ans:">",hint:"Greater-than operator"}, " 0\n\n",
+          "def greet(name):       return f", s('"Hello, {name}"'), "\n",
+          "greet_lam = lambda name: ", {blank:4,ans:'f"Hello, {name}"',hint:"f-string with the same format"}, "",
+        ]
+      },
+      {
+        id: "lam7", title: "Lambda with Conditional Expression", difficulty: "hard",
+        instruction: "Lambda can contain a ternary (inline if-else): value_if_true if condition else value_if_false",
+        parts: [
+          cm("# Ternary syntax: expr_if_true if condition else expr_if_false\n\n"),
+          "absolute = lambda x: x ", {blank:1,ans:"if",hint:"Start of ternary condition"}, " x >= 0 ", {blank:2,ans:"else",hint:"Fallback branch of ternary"}, " -x\n\n",
+          "max_two = lambda a, b: a if a > b else ", {blank:3,ans:"b",hint:"Return b when b is larger"}, "\n\n",
+          "grade_label = lambda score: ", {blank:4,ans:'"Pass"',hint:"Returned when condition is true"}, " if score >= 75 else ", s('"Fail"'), "\n\n",
+          "print(absolute(-7))       ", cm("# 7\n"),
+          "print(max_two(3, 9))      ", cm("# 9\n"),
+          "print(grade_label(80))    ", cm("# Pass"),
+        ]
+      },
+    ]
+  }
+];
+
+// Tag helpers
+function kw(v)  { return {t:"kw",  v} }
+function fn_(v) { return {t:"fn",  v} }
+function s(v)   { return {t:"str", v} }
+function n(v)   { return {t:"num", v} }
+function cm(v)  { return {t:"cm",  v} }
+function bi(v)  { return {t:"bi",  v} }
+
+// State
+const answered = {};
+let scoreC = 0, scoreW = 0, scoreT = 0;
+
+function renderPart(p, cid) {
+  if (typeof p === "string") return p;
+  if (p.t) return `<span class="${p.t}">${p.v}</span>`;
+  if (p.blank !== undefined) {
+    const w = Math.max(55, p.ans.length * 9 + 20);
+    return `<input class="blank" id="b-${cid}-${p.blank}" data-ans="${escAttr(p.ans)}" data-hint="${escAttr(p.hint)}" data-cid="${cid}" style="width:${w}px" spellcheck="false" autocomplete="off" placeholder="${p.blank}">`;
+  }
+  return "";
+}
+
+function escAttr(s) { return s.replace(/"/g,'&quot;').replace(/'/g,"&#39;"); }
+
+function buildCard(ch, topicId) {
+  const diffClass = ch.difficulty === "easy" ? "diff-easy" : ch.difficulty === "med" ? "diff-med" : "diff-hard";
+  const diffLabel = ch.difficulty === "easy" ? "easy" : ch.difficulty === "med" ? "medium" : "hard";
+  const code = ch.parts.map(p => renderPart(p, ch.id)).join("");
+  return `
+  <div class="ch" id="ch-${ch.id}">
+    <div class="ch-head">
+      <div class="ch-n">${ch.id.replace(/[a-z]/g,'').replace(/\d+/,'') || "#"}</div>
+      <div class="ch-title">${ch.title}</div>
+      <span class="ch-difficulty ${diffClass}">${diffLabel}</span>
+      <div class="ch-ico" id="ico-${ch.id}">⬜</div>
+    </div>
+    <div class="ch-body">
+      <div class="instr">${ch.instruction}</div>
+      <div class="code-block">${code}</div>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="check('${ch.id}')">✔ Check</button>
+        <button class="btn btn-hint"  onclick="hint('${ch.id}')">💡 Hint</button>
+        <button class="btn btn-show"  onclick="showAnswers('${ch.id}')">👁 Show All</button>
+        <button class="btn btn-reset" onclick="reset('${ch.id}')">↺ Reset</button>
+      </div>
+      <div class="fb" id="fb-${ch.id}"></div>
+    </div>
+  </div>`;
+}
+
+function build() {
+  let html = "";
+  let globalNum = 0;
+  topics.forEach(topic => {
+    const count = topic.challenges.length;
+    html += `<div class="topic-section" id="sec-${topic.id}">
+      <div class="topic-header">
+        <span class="topic-icon">${topic.icon}</span>
+        <span class="topic-name">${topic.name}</span>
+        <span class="topic-count">${count} challenges</span>
+      </div>`;
+    topic.challenges.forEach((ch, i) => {
+      globalNum++;
+      // Override ch-n with global number
+      html += buildCard(ch, topic.id).replace(`>${ch.id.replace(/[a-z]/g,'').replace(/\d+/,'') || "#"}<`, `>${globalNum}<`);
+    });
+    html += `</div>`;
+  });
+  document.getElementById("app").innerHTML = html;
+
+  // Enter key listener
+  document.addEventListener("keydown", e => {
+    if (e.key === "Enter" && e.target.classList.contains("blank")) {
+      check(e.target.dataset.cid);
+    }
+  });
+}
+
+function getBlanks(cid) {
+  const topic = topics.find(t => t.challenges.some(c => c.id === cid));
+  return topic ? topic.challenges.find(c => c.id === cid).parts.filter(p => p && p.blank !== undefined) : [];
+}
+
+function check(cid) {
+  const blanks = getBlanks(cid);
+  let total = blanks.length, correct = 0;
+  blanks.forEach(p => {
+    const el = document.getElementById(`b-${cid}-${p.blank}`);
+    if (!el || el.disabled) { correct++; return; }
+    const val = el.value.trim();
+    const ans = p.ans.trim();
+    const isInteger = /^-?\d+$/.test(val);
+    const isCorrect = /any integer/i.test(p.hint)
+      ? isInteger
+      : (val.toLowerCase() === ans.toLowerCase() || val === ans);
+    if (isCorrect) {
+      el.classList.remove("bad"); el.classList.add("ok"); el.disabled = true; correct++;
+    } else {
+      el.classList.remove("ok"); el.classList.add("bad");
+    }
+  });
+
+  const fb = document.getElementById(`fb-${cid}`);
+  const ico = document.getElementById(`ico-${cid}`);
+
+  if (!answered[cid]) {
+    scoreT++; document.getElementById("st").textContent = scoreT;
+    updateProgress();
+  }
+
+  if (correct === total) {
+    fb.className = "fb show ok"; fb.textContent = `✅ All ${total} blank${total>1?"s":""} correct! Great job!`;
+    if (answered[cid] !== "ok") {
+      if (!answered[cid]) { scoreC++; document.getElementById("sc").textContent = scoreC; }
+      answered[cid] = "ok"; ico.textContent = "✅";
+    }
+  } else {
+    fb.className = "fb show bad"; fb.textContent = `❌ ${correct}/${total} correct. Red blanks need fixing!`;
+    if (!answered[cid]) {
+      scoreW++; document.getElementById("sw").textContent = scoreW;
+      answered[cid] = "bad"; ico.textContent = "❌";
+    }
+  }
+}
+
+function hint(cid) {
+  const blanks = getBlanks(cid);
+  const hints = blanks.map((p,i) => `[${i+1}] ${p.hint}`).join("  •  ");
+  const fb = document.getElementById(`fb-${cid}`);
+  fb.className = "fb show hint"; fb.textContent = `💡 ${hints}`;
+}
+
+function showAnswers(cid) {
+  const blanks = getBlanks(cid);
+  blanks.forEach(p => {
+    const el = document.getElementById(`b-${cid}-${p.blank}`);
+    if (!el) return;
+    el.value = p.ans; el.classList.add("ok"); el.disabled = true;
+  });
+  const fb = document.getElementById(`fb-${cid}`);
+  fb.className = "fb show hint"; fb.textContent = "👁 Answers revealed. Study them, then reset and try again!";
+  const ico = document.getElementById(`ico-${cid}`);
+  if (!answered[cid]) { ico.textContent = "👁"; answered[cid] = "shown"; }
+  updateProgress();
+}
+
+function reset(cid) {
+  const blanks = getBlanks(cid);
+  blanks.forEach(p => {
+    const el = document.getElementById(`b-${cid}-${p.blank}`);
+    if (!el) return;
+    el.value = ""; el.classList.remove("ok","bad"); el.disabled = false;
+  });
+  const fb = document.getElementById(`fb-${cid}`);
+  fb.className = "fb";
+  document.getElementById(`ico-${cid}`).textContent = "⬜";
+  delete answered[cid];
+  scoreT = Math.max(0, scoreT - 1);
+  document.getElementById("st").textContent = scoreT;
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = topics.reduce((s,t) => s + t.challenges.length, 0);
+  const done  = Object.keys(answered).length;
+  document.getElementById("pf").style.width = `${(done/total)*100}%`;
+}
+
+build();
+</script>
+</body>
+</html>
